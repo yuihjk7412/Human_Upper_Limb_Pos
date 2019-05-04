@@ -4,6 +4,7 @@ import serial
 import time
 import numpy as np
 import threading
+import matplotlib.pyplot as plt
 
 Initialize_Num = 5
 Initialize_Threshold = 0.03
@@ -12,6 +13,7 @@ Limb_Length = 200; #the length between the origin of the platform and the base
 Upper_Limb_Origin = np.array([[0],[0],[0],[1]])
 R_initial = np.array([[0,0,1],[0,1,0],[-1,0,0]])
 RSs2Js = np.array([[0,0,1],[0,1,0],[-1,0,0]])
+Maxium_Graph_Length = 300
 
 def Imu_Data_Decode_Init():
     '''
@@ -79,6 +81,20 @@ def Set_Initial_Pos():
 
 def Serial_Read():
     while (Flag_Serial_Read):
+        with serial.Serial("/dev/ttyUSB%d"%int(Port_Num), 115200) as ser:
+            time.sleep(0.02)
+            num = ser.in_waiting
+            buf = ser.read(num)
+
+        if num:
+            for i in range(num):
+                Packet_Decode_w(buf[i])
+
+
+'''
+
+def Serial_Read():
+    while (Flag_Serial_Read):
         with serial.Serial("/dev/ttyUSB%d"%int(Port_Num), 115200, timeout=0.2) as ser:
             buf = ser.read(1024)
 
@@ -86,7 +102,7 @@ def Serial_Read():
             Packet_Decode_w(buf[i])
 
         time.sleep(0.02)
-
+'''
 def Quat2R(q0,q1,q2,q3):
     '''
 
@@ -153,10 +169,47 @@ def Stop_The_Process():
         if temp == 'q':
             return False
 
+def Get_Euler_Angle(Rot_Mat):
+    assert (Rot_Mat.shape == (3, 3))
+    xtheta = np.degrees(np.arcsin(-Rot_Mat[1][2]))
+    ytheta = np.degrees(np.arctan(Rot_Mat[0][2] / Rot_Mat[2][2]))
+    ztheta = np.degrees(np.arctan(Rot_Mat[1][0] / Rot_Mat[1][1]))
+    return [xtheta, ytheta, ztheta]
+
+def Draw_the_Euler(xpos, ypos, zpos):
+    plt.figure("Euler Angle")
+    plt.ion()
+
+    plt.ylabel('Angle/deg')
+    plt.xlabel('counts/times')
+    plt.title('Euler angle')
+    plt.ylim(-100, 100)
+    if len(xtheta) > Maxium_Graph_Length:
+        graph_Start_Index = len(xtheta) - Maxium_Graph_Length
+    else:
+        graph_Start_Index = 0
+
+    plt.clf()
+    plt.plot(Points_Num[graph_Start_Index:-1], xtheta[graph_Start_Index:-1], 'r', label='xtheta')
+    plt.plot(Points_Num[graph_Start_Index:-1], ytheta[graph_Start_Index:-1], 'g', label='ytheta')
+    plt.plot(Points_Num[graph_Start_Index:-1], ztheta[graph_Start_Index:-1], 'b', label='ztheta')
+    plt.grid(True)
+    plt.show()
+
+    print('yew i did')
+
+
+
 if __name__ == '__main__':
     total_lib = cdll.LoadLibrary("./libtotal.so")
     Imu_Data_Decode_Init()
     Quat = (c_float * 32)()
+    xtheta = [0]
+    ytheta = [0]
+    ztheta = [0]
+    xpos = [0]
+    ypos = [0]
+    zpos = [0]
     Port_Num = input('PLEASE INPUT THE PORT NUMBER(/dev/ttyUSB*):')
     with serial.Serial("/dev/ttyUSB%d" % int(Port_Num), 115200, timeout=0.2) as ser:
         print("Serial Port OK!")
@@ -172,12 +225,61 @@ if __name__ == '__main__':
     #input_command.start()
     Quat_Relative_Zero_Point = Set_Initial_Pos() #getting the initial position
 
+    '''plt.figure('Pos')
+plt.ion()
+
+plt.figure("Euler Angle")
+plt.ion()
+plt.ylabel('Angle/deg')
+    plt.xlabel('counts/times')
+    plt.title('Euler angle')
+    plt.ylim(-100, 100)'''
+    time_start = time.time()
+
     while(1):
         Get_Quat(Quat)
         Rot_Mat_u2s = Cur_Quat2Relative_R(Quat_Relative_Zero_Point, (np.asarray(Quat)).reshape((1,-1)))
         upper_o = Get_Limb_Pos(Rot_Mat_u2s)
-        print("The position of the upper limb:X:%0.3f\tY:%0.3f\tZ:%0.3f"%(upper_o[0][0,0],upper_o[0][1,0],upper_o[0][2,0]))
+        [xtheta_temp, ytheta_temp, ztheta_temp] = Get_Euler_Angle(Rot_Mat_u2s)
+        xtheta.append(xtheta_temp)
+        ytheta.append(ytheta_temp)
+        ztheta.append(ztheta_temp)
+        xpos.append(upper_o[0][0,0])
+        ypos.append(upper_o[0][1,0])
+        zpos.append(upper_o[0][2,0])
 
+        Points_Num = list(range(len(xtheta)))
+        if len(xtheta) > Maxium_Graph_Length:
+            graph_Start_Index = len(xtheta) - Maxium_Graph_Length
+        else:
+            graph_Start_Index = 0
+        '''
+        plt.figure("Euler Angle")
+        plt.clf()
+        plt.plot(Points_Num[graph_Start_Index:-1], xtheta[graph_Start_Index:-1],'r',label = 'xtheta')
+        plt.plot(Points_Num[graph_Start_Index:-1], ytheta[graph_Start_Index:-1],'g',label = 'ytheta')
+        plt.plot(Points_Num[graph_Start_Index:-1], ztheta[graph_Start_Index:-1],'b',label = 'ztheta')
+        plt.grid(True)
+        plt.draw()
+        plt.pause(0.01)
+        
+        plt.figure('Pos')
+        plt.clf()
+        plt.plot(Points_Num[graph_Start_Index:-1], xpos[graph_Start_Index:-1], 'r', label='xtheta')
+        plt.plot(Points_Num[graph_Start_Index:-1], ypos[graph_Start_Index:-1], 'g', label='ytheta')
+        plt.plot(Points_Num[graph_Start_Index:-1], zpos[graph_Start_Index:-1], 'b', label='ztheta')
+        plt.grid(True)
+        plt.draw()
+        plt.pause(0.02)'''
+
+
+
+        #time.sleep(0.02)
+        print("NO%d\tX:%0.3f\tY:%0.3f\tZ:%0.3f"%(len(xtheta),upper_o[0][0,0],upper_o[0][1,0],upper_o[0][2,0]))
+        '''if len(xtheta) > 500:
+            time_end = time.time()
+            break'''
+    print('Time:%f'%(time_end - time_start))
     Flag_Serial_Read = False
 
 
