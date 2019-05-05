@@ -10,6 +10,8 @@ from pandas import DataFrame
 from multiprocessing import Process, Queue
 import os
 
+total_lib = cdll.LoadLibrary("./libtotal.so")
+Quat = (c_float * 32)()
 Initialize_Num = 5
 Initialize_Threshold = 0.03
 Flag_Serial_Read = False
@@ -180,85 +182,66 @@ def Get_Euler_Angle(Rot_Mat):
     ztheta = np.degrees(np.arctan(Rot_Mat[1][0] / Rot_Mat[1][1]))
     return [xtheta, ytheta, ztheta]
 
-def Draw_the_Euler(xpos, ypos, zpos):
-    plt.figure("Euler Angle")
-    plt.ion()
 
-    plt.ylabel('Angle/deg')
-    plt.xlabel('counts/times')
-    plt.title('Euler angle')
-    plt.ylim(-100, 100)
-    if len(xtheta) > Maxium_Graph_Length:
-        graph_Start_Index = len(xtheta) - Maxium_Graph_Length
-    else:
-        graph_Start_Index = 0
-
-    plt.clf()
-    plt.plot(Points_Num[graph_Start_Index:-1], xtheta[graph_Start_Index:-1], 'r', label='xtheta')
-    plt.plot(Points_Num[graph_Start_Index:-1], ytheta[graph_Start_Index:-1], 'g', label='ytheta')
-    plt.plot(Points_Num[graph_Start_Index:-1], ztheta[graph_Start_Index:-1], 'b', label='ztheta')
-    plt.grid(True)
-    plt.show()
-
-    print('yew i did')
-
-
-
-if __name__ == '__main__':
-    total_lib = cdll.LoadLibrary("./libtotal.so")
+def Serial_Read_Data_Analysis(q,Port_Num):
     Imu_Data_Decode_Init()
-    Quat = (c_float * 32)()
+
+    with serial.Serial("/dev/ttyUSB%d" % int(Port_Num), 115200, timeout=0.2) as ser:
+        print("Serial Port OK!")
+    ser.close()
+    try:
+        ts = threading.Thread(target=Serial_Read, name='Serial_Read_Thread')
+    except:
+        raise EOFError
+
+    ts.start()  # start reading the data from the Serial port
+    Quat_Relative_Zero_Point = Set_Initial_Pos()  # getting the initial position
+
+    i = 0
+
+    while (1):
+        Get_Quat(Quat)
+        Rot_Mat_u2s = Cur_Quat2Relative_R(Quat_Relative_Zero_Point, (np.asarray(Quat)).reshape((1, -1)))
+        upper_o = Get_Limb_Pos(Rot_Mat_u2s)
+        [xtheta_temp, ytheta_temp, ztheta_temp] = Get_Euler_Angle(Rot_Mat_u2s)
+
+        q.put([xtheta_temp,ytheta_temp,ztheta_temp,upper_o[0][0, 0],upper_o[0][1, 0],upper_o[0][2, 0]])
+
+        i = i+1
+        print("NO%d\tX:%0.3f\tY:%0.3f\tZ:%0.3f" % (i, upper_o[0][0, 0], upper_o[0][1, 0], upper_o[0][2, 0]))
+        print("NO%d\tX:%0.3f\tY:%0.3f\tZ:%0.3f" % (i, xtheta_temp, ytheta_temp, ztheta_temp))
+
+def Plot_Data(q):
     xtheta = [0]
     ytheta = [0]
     ztheta = [0]
     xpos = [0]
     ypos = [0]
     zpos = [0]
-    Port_Num = input('PLEASE INPUT THE PORT NUMBER(/dev/ttyUSB*):')
-    with serial.Serial("/dev/ttyUSB%d" % int(Port_Num), 115200, timeout=0.2) as ser:
-        print("Serial Port OK!")
-    ser.close()
-    Flag_Serial_Read = True
-    try:
-        ts = threading.Thread(target=Serial_Read, name='Serial_Read_Thread')
-        #input_command = threading.Thread(target=Stop_The_Process, name='Stop_the_process')
+    plt.figure('Pos')
+    plt.ion()
 
-    except:
-        raise EOFError
-
-    ts.start() #start reading the data from the Serai port
-    #input_command.start()
-    Quat_Relative_Zero_Point = Set_Initial_Pos() #getting the initial position
-
-    '''plt.figure('Pos')
-plt.ion()
-
-plt.figure("Euler Angle")
-plt.ion()
-plt.ylabel('Angle/deg')
+    plt.figure("Euler Angle")
+    plt.ion()
+    plt.ylabel('Angle/deg')
     plt.xlabel('counts/times')
     plt.title('Euler angle')
-    plt.ylim(-100, 100)'''
-    time_start = time.time()
-
+    plt.ylim(-100, 100)
     while(1):
-        Get_Quat(Quat)
-        Rot_Mat_u2s = Cur_Quat2Relative_R(Quat_Relative_Zero_Point, (np.asarray(Quat)).reshape((1,-1)))
-        upper_o = Get_Limb_Pos(Rot_Mat_u2s)
-        [xtheta_temp, ytheta_temp, ztheta_temp] = Get_Euler_Angle(Rot_Mat_u2s)
-        xtheta.append(xtheta_temp)
-        ytheta.append(ytheta_temp)
-        ztheta.append(ztheta_temp)
-        xpos.append(upper_o[0][0,0])
-        ypos.append(upper_o[0][1,0])
-        zpos.append(upper_o[0][2,0])
+        temp = q.get(True)
+        xtheta.append(temp[0])
+        ytheta.append(temp[1])
+        ztheta.append(temp[2])
+        xpos.append(temp[3])
+        ypos.append(temp[4])
+        zpos.append(temp[5])
 
         Points_Num = list(range(len(xtheta)))
         if len(xtheta) > Maxium_Graph_Length:
             graph_Start_Index = len(xtheta) - Maxium_Graph_Length
         else:
             graph_Start_Index = 0
-        '''
+
         plt.figure("Euler Angle")
         plt.clf()
         plt.plot(Points_Num[graph_Start_Index:-1], xtheta[graph_Start_Index:-1],'r',label = 'xtheta')
@@ -267,7 +250,7 @@ plt.ylabel('Angle/deg')
         plt.grid(True)
         plt.draw()
         plt.pause(0.01)
-        
+
         plt.figure('Pos')
         plt.clf()
         plt.plot(Points_Num[graph_Start_Index:-1], xpos[graph_Start_Index:-1], 'r', label='xtheta')
@@ -275,46 +258,15 @@ plt.ylabel('Angle/deg')
         plt.plot(Points_Num[graph_Start_Index:-1], zpos[graph_Start_Index:-1], 'b', label='ztheta')
         plt.grid(True)
         plt.draw()
-        plt.pause(0.02)'''
+        plt.pause(0.01)
 
 
-
-        #time.sleep(0.02)
-        print("NO%d\tX:%0.3f\tY:%0.3f\tZ:%0.3f"%(len(xtheta),upper_o[0][0,0],upper_o[0][1,0],upper_o[0][2,0]))
-        '''if len(xtheta) > 500:
-            time_end = time.time()
-            break'''
-    print('Time:%f'%(time_end - time_start))
-    Flag_Serial_Read = False
-
-
-'''
 if __name__ == '__main__':
-    #packet_lib = cdll.LoadLibrary("./libpacket.so")
-    #imu_data_decode_lib = cdll.LoadLibrary("./libimu_data_decode.so")
-    #imu_data_decode_lib.imu_data_decode_init()
-    total_lib = cdll.LoadLibrary("./libtotal.so")
-    #total_lib.imu_data_decode_init()
-    Imu_Data_Decode_Init()
-    Quat = (c_float * 32)()
-    while(1):
+    q = Queue()
 
-        with serial.Serial("/dev/ttyUSB0",115200,timeout=0.2) as ser:
-            buf = ser.read(1024)
+    Port_Num = input('PLEASE INPUT THE PORT NUMBER(/dev/ttyUSB*):')
+    p_Serial_Read = Process(target=Serial_Read_Data_Analysis,args=(q,Port_Num,))
+    p_Plot = Process(target=Plot_Data,args=(q,))
 
-
-        for i in range(1024):
-            #packet_lib.Packet_Decode(c_char(buf[i]))
-            #total_lib.Packet_Decode(c_char(buf[i]))
-            Packet_Decode_w(buf[i])
-        ini_quat = Set_Initial_Pos()
-        #imu_data_decode_lib.get_quat(byref(Quat))
-        #total_lib.get_quat(byref(Quat))
-        Get_Quat(Quat)
-        print("POINT1:quat(W X Y Z):%0.3f %0.3f %0.3f %0.3f\r\n"%(Quat[0], Quat[1], Quat[2], Quat[3]))
-        print("POINT2:quat(W X Y Z):%0.3f %0.3f %0.3f %0.3f\r\n"%(Quat[4], Quat[5], Quat[6], Quat[7]))
-        time.sleep(0.02)'''
-
-
-
-
+    p_Serial_Read.start()
+    p_Plot.start()
