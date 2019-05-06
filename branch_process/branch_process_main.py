@@ -88,7 +88,7 @@ def Set_Initial_Pos():
 def Serial_Read():
     while (Flag_Serial_Read):
         with serial.Serial("/dev/ttyUSB%d"%int(Port_Num), 115200) as ser:
-            time.sleep(0.02)
+            time.sleep(0.01)
             num = ser.in_waiting
             buf = ser.read(num)
 
@@ -184,7 +184,8 @@ def Get_Euler_Angle(Rot_Mat):
 
 
 def Serial_Read_Data_Analysis(q,Port_Num):
-    Imu_Data_Decode_Init()
+    #Imu_Data_Decode_Init()
+    total_lib.imu_data_decode_init()
 
     with serial.Serial("/dev/ttyUSB%d" % int(Port_Num), 115200, timeout=0.2) as ser:
         print("Serial Port OK!")
@@ -266,7 +267,14 @@ if __name__ == '__main__':
 
     Port_Num = input('PLEASE INPUT THE PORT NUMBER(/dev/ttyUSB*):')
     p_Serial_Read = Process(target=Serial_Read_Data_Analysis,args=(q,Port_Num,))
-    p_Plot = Process(target=Plot_Data,args=(q,))
+    #p_Plot = Process(target=Plot_Data,args=(q,))
 
     p_Serial_Read.start()
-    p_Plot.start()
+    #p_Plot.start()
+    while 1:
+        time.sleep(60)
+        '''a = input()
+        if a == 'q':
+            break'''
+    p_Serial_Read.terminate()
+    #p_Plot.terminate()

@@ -9,6 +9,7 @@ import pandas as pd
 from pandas import DataFrame
 from multiprocessing import Process, Queue
 import os
+import data_plot as dp
 
 Initialize_Num = 5
 Initialize_Threshold = 0.03
@@ -202,9 +203,14 @@ def Draw_the_Euler(xpos, ypos, zpos):
 
     print('yew i did')
 
+def Plot_Data():
+    dp.ploting_data()
 
 
 if __name__ == '__main__':
+
+    p_pd = Process(target=Plot_Data,name='Plot_Data')
+
     total_lib = cdll.LoadLibrary("./libtotal.so")
     Imu_Data_Decode_Init()
     Quat = (c_float * 32)()
@@ -219,6 +225,8 @@ if __name__ == '__main__':
         print("Serial Port OK!")
     ser.close()
     Flag_Serial_Read = True
+    Current_Time = time.strftime('%Y%m%d_%H%M%S',time.localtime(time.time()))
+    os.mknod('%s.csv'%Current_Time)
     try:
         ts = threading.Thread(target=Serial_Read, name='Serial_Read_Thread')
         #input_command = threading.Thread(target=Stop_The_Process, name='Stop_the_process')
@@ -258,6 +266,10 @@ plt.ylabel('Angle/deg')
             graph_Start_Index = len(xtheta) - Maxium_Graph_Length
         else:
             graph_Start_Index = 0
+
+        df = DataFrame([[xtheta_temp,ytheta_temp,ztheta_temp,upper_o[0][0,0],upper_o[0][1,0],upper_o[0][2,0]]])
+        df.to_csv('%s.csv'%Current_Time,mode='a',header=False,index=False)
+
         '''
         plt.figure("Euler Angle")
         plt.clf()
@@ -277,7 +289,8 @@ plt.ylabel('Angle/deg')
         plt.draw()
         plt.pause(0.02)'''
 
-
+        p_pd.start()
+        p_pd.join()
 
         #time.sleep(0.02)
         print("NO%d\tX:%0.3f\tY:%0.3f\tZ:%0.3f"%(len(xtheta),upper_o[0][0,0],upper_o[0][1,0],upper_o[0][2,0]))
