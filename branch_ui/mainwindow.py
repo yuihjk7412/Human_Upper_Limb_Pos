@@ -13,20 +13,43 @@ import pandas as pd
 from pandas import DataFrame
 from multiprocessing import Process, Queue
 import os
-import data_plot as dp
 
-
+print("import completed")
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
+        # 加载ui文件
         loadUi('mainwindow.ui', self)
         #self.setFixedSize(self.sizeHint())
         self.Process_Flag = False
         self.Record_Flag = False
         self.Initialize_Num = 5
         self.Initialize_Threshold = 0.03
+        '''
+#####################################################3
+        self.m_step = 0
+        self.m_x = 5
+        self.m_y = 1
+        # 初始化图像
+        self.series = QSplineSeries(self)
+        green_pen = QPen(Qt.red)
+        green_pen.setWidth(3)
+        self.series.setPen(green_pen)
+        self.axisX = QValueAxis()
+        self.axisY = QValueAxis()
+        self.series.append(self.m_x, self.m_y)
 
+        self.addSeries(self.series)
+        self.addAxis(self.axisX, Qt.AlignBottom)
+        self.addAxis(self.axisY, Qt.AlignLeft)
+        self.series.attachAxis(self.axisX)
+        self.series.attachAxis(self.axisY)
+        self.axisX.setTickCount(5)
+        self.axisX.setRange(0, 10)
+        self.axisY.setRange(-5, 10)
+        ####################################################
+'''
         self.pushButton_exit.clicked.connect(self.Exit_Process)
         self.pushButton_start.clicked.connect(self.Start_Process)
         self.pushButton_datarecord.clicked.connect(self.Start_Record)
@@ -185,12 +208,14 @@ class MainWindow(QMainWindow):
         return [u_o]
 
     def Get_Euler_Angle(self,Rot_Mat):
-        xtheta = np.degrees(np.arcsin(-Rot_Mat[1][2]))
+        #xtheta = np.degrees(np.arcsin(-Rot_Mat[1][2]))
         ytheta = np.degrees(np.arctan(Rot_Mat[0][2] / Rot_Mat[2][2]))
         ztheta = np.degrees(np.arctan(Rot_Mat[1][0] / Rot_Mat[1][1]))
+        xtheta = np.degrees(np.arctan(Rot_Mat[1][2] / Rot_Mat[0][2] * np.sin(ytheta)))
         return [xtheta, ytheta, ztheta]
 
     def Start_Record(self):
+        self.Current_Time = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
         os.mknod('%s.csv' % self.Current_Time)
         self.Record_Flag = True
 

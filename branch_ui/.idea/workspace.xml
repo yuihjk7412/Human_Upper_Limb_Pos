@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5c5d9038-7819-4425-95af-2be1e22c3fea" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_output.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_output.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../branch_ui/mainwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/../branch_ui/mainwindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../branch_ui/mainwindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../branch_ui/mainwindow.ui" afterDir="false" />
+    <list default="true" id="5c5d9038-7819-4425-95af-2be1e22c3fea" name="Default Changelist" comment="20190506&#10;complete a ui">
+      <change beforePath="$PROJECT_DIR$/../branch_data_output/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../branch_data_output/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../branch_data_output/data_output.py" beforeDir="false" afterPath="$PROJECT_DIR$/../branch_data_output/data_output.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mainwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainwindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mainwindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/mainwindow.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../imu_data_decode.c" beforeDir="false" afterPath="$PROJECT_DIR$/../imu_data_decode.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../imu_data_decode.h" beforeDir="false" afterPath="$PROJECT_DIR$/../imu_data_decode.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../packet.c" beforeDir="false" afterPath="$PROJECT_DIR$/../packet.c" afterDir="false" />
@@ -18,9 +18,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/branch_ui$data_output.coverage" NAME="data_output Coverage Results" MODIFIED="1557301386642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/branch_ui$mainwindow.coverage" NAME="mainwindow Coverage Results" MODIFIED="1557499693019" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/branch_data_output$data_plot.coverage" NAME="data_plot Coverage Results" MODIFIED="1557134986776" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/branch_test_one_IMU$main_file.coverage" NAME="main_file Coverage Results" MODIFIED="1557111418905" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/branch_data_output$data_output.coverage" NAME="data_output Coverage Results" MODIFIED="1557730859296" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/branch_data_output$data_output.coverage" NAME="data_output Coverage Results" MODIFIED="1557134751706" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-1215531669">
@@ -54,52 +56,83 @@
     <session id="-2130901415">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="8" />
-          <entry key="project.open.time.0" value="5" />
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.12" value="1" />
-          <entry key="project.open.time.13" value="1" />
-          <entry key="project.open.time.14" value="1" />
-          <entry key="project.open.time.24" value="1" />
-          <entry key="project.opened" value="10" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="4" />
+          <entry key="py" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="4" />
+          <entry key="Python" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="1517" />
+          <entry key="py" value="694" />
           <entry key="txt" value="44" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="44" />
-          <entry key="Python" value="1517" />
+          <entry key="Python" value="694" />
+        </counts>
+      </usages-collector>
+    </session>
+    <session id="-6334548">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="6" />
+          <entry key="project.open.time.0" value="3" />
+          <entry key="project.open.time.12" value="1" />
+          <entry key="project.open.time.13" value="1" />
+          <entry key="project.open.time.14" value="1" />
+          <entry key="project.open.time.8" value="1" />
+          <entry key="project.opened" value="7" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="py" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Python" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="py" value="2483" />
+          <entry key="txt" value="13" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="PLAIN_TEXT" value="13" />
+          <entry key="Python" value="2483" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/data_output.py">
+        <entry file="file://$PROJECT_DIR$/mainwindow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="21" column="25" lean-forward="true" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
+            <state relative-caret-position="352">
+              <caret line="16" column="25" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
               <folding>
-                <element signature="e#0#13#0" expanded="true" />
-                <marker date="1557729332016" expanded="true" signature="6114:7589" ph="..." />
-                <marker date="1557729332016" expanded="true" signature="6205:7589" ph="..." />
-                <marker date="1557729332016" expanded="true" signature="6471:7589" ph="..." />
+                <element signature="e#0#10#0" expanded="true" />
+                <marker date="1557297098237" expanded="true" signature="2553:2559" ph="..." />
+                <marker date="1557297098237" expanded="true" signature="3040:3049" ph="..." />
               </folding>
             </state>
           </provider>
@@ -109,7 +142,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>RSs2Js</find>
+      <find>dp</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -119,8 +152,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/main_file.py" />
-        <option value="$PROJECT_DIR$/data_plot.py" />
         <option value="$PROJECT_DIR$/data_output.py" />
+        <option value="$PROJECT_DIR$/data_plot.py" />
+        <option value="$PROJECT_DIR$/mainwindow.py" />
       </list>
     </option>
   </component>
@@ -142,26 +176,26 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="branch_data_output" type="b2602c69:ProjectViewProjectNode" />
-              <item name="branch_data_output" type="462c0819:PsiDirectoryNode" />
+              <item name="branch_ui" type="b2602c69:ProjectViewProjectNode" />
+              <item name="branch_ui" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../branch_data_output" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="PyScientificConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -175,7 +209,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.data_output">
+  <component name="RunManager" selected="Python.mainwindow">
     <configuration name="data_output" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="branch_test_one_IMU" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -242,13 +276,37 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="mainwindow" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="branch_test_one_IMU" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mainwindow.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.main_file" />
       <item itemvalue="Python.data_output" />
       <item itemvalue="Python.data_plot" />
+      <item itemvalue="Python.mainwindow" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.mainwindow" />
         <item itemvalue="Python.data_output" />
         <item itemvalue="Python.data_plot" />
         <item itemvalue="Python.main_file" />
@@ -273,20 +331,26 @@
       <option name="project" value="LOCAL" />
       <updated>1557133527092</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="20190506&#10;complete a ui">
+      <created>1557239182786</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1557239182786</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18518518" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13709232" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32975295" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.21482277" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39957035" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -294,7 +358,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32975295" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -311,10 +375,37 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="20190506&#10;add data output function" />
-    <option name="LAST_COMMIT_MESSAGE" value="20190506&#10;add data output function" />
+    <MESSAGE value="20190506&#10;complete a ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="20190506&#10;complete a ui" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/mainwindow.py</url>
+          <line>227</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/mainwindow.py</url>
+          <line>226</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/main_file.py" />
+    <entry file="file://$PROJECT_DIR$/data_output.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="262" selection-start-line="262" selection-end-line="262" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data_plot.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1694">
@@ -322,15 +413,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data_output.py">
+    <entry file="file://$PROJECT_DIR$/../branch_data_output/data_output.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mainwindow.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="21" column="25" lean-forward="true" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
+        <state relative-caret-position="352">
+          <caret line="16" column="25" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <marker date="1557729332016" expanded="true" signature="6114:7589" ph="..." />
-            <marker date="1557729332016" expanded="true" signature="6205:7589" ph="..." />
-            <marker date="1557729332016" expanded="true" signature="6471:7589" ph="..." />
+            <element signature="e#0#10#0" expanded="true" />
+            <marker date="1557297098237" expanded="true" signature="2553:2559" ph="..." />
+            <marker date="1557297098237" expanded="true" signature="3040:3049" ph="..." />
           </folding>
         </state>
       </provider>

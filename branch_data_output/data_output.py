@@ -11,8 +11,9 @@ from multiprocessing import Process, Queue
 import os
 import data_plot as dp
 
+
 Initialize_Num = 5
-Initialize_Threshold = 0.03
+Initialize_Threshold = 0.02
 Flag_Serial_Read = False
 Limb_Length = 200; #the length between the origin of the platform and the base
 Upper_Limb_Origin = np.array([[0],[0],[0],[1]])
@@ -130,8 +131,7 @@ def Quat2R(q0,q1,q2,q3):
     assert (R.shape == (3,3))
     return R
 
-def Cur_Quat2Relative_R(Relative_Zero_Points, Current_Points,Total_Arr_Length = 32):
-    RSs2Js = np.eye(3)
+def Cur_Quat2Relative_R(Relative_Zero_Points, Current_Points, REu2Es, RSs2Js, Total_Arr_Length = 32):
 
     assert (Current_Points.shape == (1,Total_Arr_Length))
     assert (Relative_Zero_Points.shape == (1,Total_Arr_Length))
@@ -139,10 +139,6 @@ def Cur_Quat2Relative_R(Relative_Zero_Points, Current_Points,Total_Arr_Length = 
     RSu02e = Quat2R(Relative_Zero_Points[0,4],Relative_Zero_Points[0,5],Relative_Zero_Points[0,6],Relative_Zero_Points[0,7])
     RSs2e = Quat2R(Current_Points[0,0],Current_Points[0,1],Current_Points[0,2],Current_Points[0,3])
     RSu2e = Quat2R(Current_Points[0,4],Current_Points[0,5],Current_Points[0,6],Current_Points[0,7])
-    assert (RSs02e.shape == (3, 3))
-    assert (RSu02e.shape == (3, 3))
-    assert (RSs2e.shape == (3, 3))
-    assert (RSu2e.shape == (3, 3))
     RSs2Ss0 = np.dot(np.linalg.inv(RSs02e), RSs2e)
     RSu2Su0 = np.dot(np.linalg.inv(RSu02e),RSu2e)
 
@@ -150,13 +146,13 @@ def Cur_Quat2Relative_R(Relative_Zero_Points, Current_Points,Total_Arr_Length = 
     RJs2Js0 = np.dot(RJs2Js0, np.linalg.inv(RSs2Js))
 
     RSu2Ju = np.dot(RSs2Js, np.linalg.inv(RSs02e))
+    RSu2Ju = np.dot(RSu2Ju, REu2Es)
     RSu2Ju = np.dot(RSu2Ju, RSu02e)
     RJu2Ju0 = np.dot(RSu2Ju, RSu2Su0)
     RJu2Ju0 = np.dot(RJu2Ju0, np.linalg.inv(RSu2Ju))
 
     RJu2Js = np.dot(np.linalg.inv(RJs2Js0), RJu2Ju0)
 
-    assert (RJu2Js.shape == (3,3))
     return RJu2Js
 
 def Get_Limb_Pos(Rot_Mat):
@@ -206,10 +202,54 @@ def Draw_the_Euler(xpos, ypos, zpos):
 def Plot_Data():
     dp.ploting_data()
 
+def cal_RSsJs(q0,q1,q2,q3):
+    # 放置与躯干传感器默认Y轴与关节Y轴平行，放置于胸前，Z轴指向身体外
+    RSs2Js = Quat2R(q0,q1,q2,q3)
+    yta = np.arcsin(-RSs2Js[2,0])
+    yta = np.squeeze(yta)
+    RSs2Js = np.array([[np.cos(yta),0,np.sin(yta)],[0,1,0],[-np.sin(yta),0,np.cos(yta)]])
+    print('ytheta:%0.3f'%np.degrees(yta))
+    return RSs2Js
+
+def Norm_Cordinate():
+    print("请将两个IMU放置为同一姿态")
+    time.sleep(2)
+    temp = np.zeros([1, 32])
+    i = 0
+    while i < Initialize_Num:
+        Get_Quat(Quat)
+        for j in range(32):
+            temp[i, j] = Quat[j]
+        print("The %d time initialization:" % (i + 1))
+        # print(temp)
+        # Print_Quat_Info()
+        Max_Dif = np.max(temp, axis=0, keepdims=True) - np.min(temp, axis=0, keepdims=True)
+        assert (Max_Dif.shape == (1, 32))
+        if ((Max_Dif > Initialize_Threshold).any()):
+            i = 0
+            print(Max_Dif > Initialize_Threshold)
+            print("Initialization Failure!Please stay still!")
+            temp = np.zeros([1, 32])
+            continue
+        time.sleep(0.5)
+        temp = np.row_stack((temp, np.zeros([1, 32])))
+        i = i + 1
+
+    temp = np.delete(temp, -1, 0)
+    average = np.average(temp, axis=0)
+    average = np.reshape(average, (1, 32))
+    RSs2Es = Quat2R(average[0][0],average[0][1],average[0][2],average[0][3])
+    RSu2Eu = Quat2R(average[0][4],average[0][5],average[0][6],average[0][7])
+    REu2Es = np.dot(RSs2Es,np.linalg.inv(RSu2Eu))
+    return REu2Es
 
 if __name__ == '__main__':
 
 
+    while 1:
+        temp = input("start the process?(Y/N):")
+        if temp == 'Y' or temp == 'y':
+            break
 
     total_lib = cdll.LoadLibrary("./libtotal.so")
     Imu_Data_Decode_Init()
@@ -225,19 +265,36 @@ if __name__ == '__main__':
         print("Serial Port OK!")
     ser.close()
     Flag_Serial_Read = True
-    Current_Time = time.strftime('%Y%m%d_%H%M%S',time.localtime(time.time()))
-    os.mknod('%s.csv'%Current_Time)
+
+    # 打开串口线程，持续读数
     try:
         ts = threading.Thread(target=Serial_Read, name='Serial_Read_Thread')
-        #input_command = threading.Thread(target=Stop_The_Process, name='Stop_the_process')
 
     except:
         raise EOFError
-
     ts.start() #start reading the data from the Serai port
-    #input_command.start()
-    Quat_Relative_Zero_Point = Set_Initial_Pos() #getting the initial position
 
+    temp = input("统一IMU参考系?(Y/N)")
+    if temp == 'Y' or temp == 'y':
+        REu2Es = Norm_Cordinate()
+    else:
+        REu2Es = np.eye(3)
+
+    while 1:
+        temp = input("Set the initial position?(Y/N)")
+        if temp == 'Y' or temp == 'y':
+            break
+    Quat_Relative_Zero_Point = Set_Initial_Pos() #获得初始状态值
+    RSs2Js = cal_RSsJs(Quat_Relative_Zero_Point[0,0],Quat_Relative_Zero_Point[0,1],Quat_Relative_Zero_Point[0,2],Quat_Relative_Zero_Point[0,3])
+    # 是否记录数据
+    Flag_Data_Record = input("Record the data?(Y/N)")
+    if Flag_Data_Record == 'Y' or Flag_Data_Record == 'y':
+        Flag_Data_Record = True
+        # 获取当前时间作为文件名，建立空白.csv文档
+        Current_Time = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
+        os.mknod('%s.csv' % Current_Time)
+    else:
+        Flag_Data_Record = False
     '''plt.figure('Pos')
 plt.ion()
 
@@ -251,7 +308,7 @@ plt.ylabel('Angle/deg')
 
     while(1):
         Get_Quat(Quat)
-        Rot_Mat_u2s = Cur_Quat2Relative_R(Quat_Relative_Zero_Point, (np.asarray(Quat)).reshape((1,-1)))
+        Rot_Mat_u2s = Cur_Quat2Relative_R(Quat_Relative_Zero_Point, (np.asarray(Quat)).reshape((1,-1)), REu2Es, RSs2Js)
         upper_o = Get_Limb_Pos(Rot_Mat_u2s)
         [xtheta_temp, ytheta_temp, ztheta_temp] = Get_Euler_Angle(Rot_Mat_u2s)
         xtheta.append(xtheta_temp)
@@ -266,9 +323,9 @@ plt.ylabel('Angle/deg')
             graph_Start_Index = len(xtheta) - Maxium_Graph_Length
         else:
             graph_Start_Index = 0
-
-        df = DataFrame([[xtheta_temp,ytheta_temp,ztheta_temp,upper_o[0][0,0],upper_o[0][1,0],upper_o[0][2,0]]])
-        df.to_csv('%s.csv'%Current_Time,mode='a',header=False,index=False)
+        if Flag_Data_Record:
+            df = DataFrame([[xtheta_temp,ytheta_temp,ztheta_temp,upper_o[0][0,0],upper_o[0][1,0],upper_o[0][2,0]]])
+            df.to_csv('%s.csv'%Current_Time,mode='a',header=False,index=False)
 
         '''
         plt.figure("Euler Angle")
@@ -300,34 +357,6 @@ plt.ylabel('Angle/deg')
             break'''
     print('Time:%f'%(time_end - time_start))
     Flag_Serial_Read = False
-
-
-'''
-if __name__ == '__main__':
-    #packet_lib = cdll.LoadLibrary("./libpacket.so")
-    #imu_data_decode_lib = cdll.LoadLibrary("./libimu_data_decode.so")
-    #imu_data_decode_lib.imu_data_decode_init()
-    total_lib = cdll.LoadLibrary("./libtotal.so")
-    #total_lib.imu_data_decode_init()
-    Imu_Data_Decode_Init()
-    Quat = (c_float * 32)()
-    while(1):
-
-        with serial.Serial("/dev/ttyUSB0",115200,timeout=0.2) as ser:
-            buf = ser.read(1024)
-
-
-        for i in range(1024):
-            #packet_lib.Packet_Decode(c_char(buf[i]))
-            #total_lib.Packet_Decode(c_char(buf[i]))
-            Packet_Decode_w(buf[i])
-        ini_quat = Set_Initial_Pos()
-        #imu_data_decode_lib.get_quat(byref(Quat))
-        #total_lib.get_quat(byref(Quat))
-        Get_Quat(Quat)
-        print("POINT1:quat(W X Y Z):%0.3f %0.3f %0.3f %0.3f\r\n"%(Quat[0], Quat[1], Quat[2], Quat[3]))
-        print("POINT2:quat(W X Y Z):%0.3f %0.3f %0.3f %0.3f\r\n"%(Quat[4], Quat[5], Quat[6], Quat[7]))
-        time.sleep(0.02)'''
 
 
 
