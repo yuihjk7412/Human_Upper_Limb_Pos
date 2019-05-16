@@ -159,7 +159,10 @@ def Get_Limb_Pos(Rot_Mat):
     assert (Rot_Mat.shape == (3,3))
     Trans = np.column_stack((Rot_Mat, np.zeros([3,1])))
     Trans = np.row_stack((Trans, np.zeros((1,4))))
-    Linear_Trans = np.array([[1,0,0,0],[0,1,0,0],[0,0,1,-Limb_Length],[0,0,0,1]])
+    # 初始位姿为双臂垂于体侧
+    #Linear_Trans = np.array([[1,0,0,0],[0,1,0,0],[0,0,1,-Limb_Length],[0,0,0,1]])
+    # 初始位姿为Tpose
+    Linear_Trans = np.array([[1, 0, 0, 0], [0, 1, 0, -Limb_Length], [0, 0, 1, 0], [0, 0, 0, 1]])
     Trans = np.dot(Trans,Linear_Trans)
     u_o = np.dot(Trans, Upper_Limb_Origin)
     return [u_o]
@@ -206,9 +209,13 @@ def cal_RSsJs(q0,q1,q2,q3):
     # 放置与躯干传感器默认Y轴与关节Y轴平行，放置于胸前，Z轴指向身体外
     RSs2Js = Quat2R(q0,q1,q2,q3)
     yta = np.arcsin(-RSs2Js[2,0])
+    xta = np.arctan2(RSs2Js[2,1], RSs2Js[2,2])
     yta = np.squeeze(yta)
-    RSs2Js = np.array([[np.cos(yta),0,np.sin(yta)],[0,1,0],[-np.sin(yta),0,np.cos(yta)]])
+    xta = np.squeeze(xta)
+    RSs2Js = np.array([[np.cos(yta),np.sin(xta)*np.sin(yta), np.sin(yta)*np.cos(xta)],[0,np.cos(xta),-np.sin(xta)],
+                       [-np.sin(yta),np.cos(yta)*np.sin(xta),np.cos(xta)*np.cos(yta)]])
     print('ytheta:%0.3f'%np.degrees(yta))
+    print('xtheta:%0.3f' % np.degrees(xta))
     return RSs2Js
 
 def Norm_Cordinate():
