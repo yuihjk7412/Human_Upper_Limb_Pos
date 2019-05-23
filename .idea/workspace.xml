@@ -1,25 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="70ed2bd6-dc63-489b-98e8-eca90c14fee2" name="Default Changelist" comment="20190504&#10;draw the graph of the pos and euler angle">
-      <change afterPath="$PROJECT_DIR$/branch_cross_verify/cross_verify.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/branch_cross_verify/imu_data_decode.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/branch_cross_verify/imu_data_decode.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/branch_cross_verify/imu_data_decode.o" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/branch_cross_verify/libtotal.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/branch_cross_verify/packet.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/branch_cross_verify/packet.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/branch_cross_verify/packet.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/whateverittakes.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/whateverittakes.iml" afterDir="false" />
+    <list default="true" id="70ed2bd6-dc63-489b-98e8-eca90c14fee2" name="Default Changelist" comment="201905023&#10;cross verify the imu data">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/branch_data_output/.idea/branch_test_one_IMU.iml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_data_output/.idea/branch_test_one_IMU.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/branch_data_output/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_data_output/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/branch_data_output/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_data_output/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMU_data_read.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMU_data_read.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_cross_verify/20190523_105947.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_data_output/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_data_output/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_data_output/.idea/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_data_output/.idea/other.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_data_output/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_data_output/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_process/.idea/branch_process.iml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_process/.idea/branch_process.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_process/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_process/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_process/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_process/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_process/.idea/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_process/.idea/other.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_process/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_process/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_process/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_process/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_process/imu_data_decode.o" beforeDir="false" afterPath="$PROJECT_DIR$/branch_process/imu_data_decode.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_process/packet.o" beforeDir="false" afterPath="$PROJECT_DIR$/branch_process/packet.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_test_one_IMU/.idea/branch_test_one_IMU.iml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_test_one_IMU/.idea/branch_test_one_IMU.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_test_one_IMU/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_test_one_IMU/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_test_one_IMU/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_test_one_IMU/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_test_one_IMU/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_test_one_IMU/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_test_one_IMU/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_test_one_IMU/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_test_one_IMU/IMU_data_read.py" beforeDir="false" afterPath="$PROJECT_DIR$/branch_test_one_IMU/IMU_data_read.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_test_one_IMU/imu_data_decode.o" beforeDir="false" afterPath="$PROJECT_DIR$/branch_test_one_IMU/imu_data_decode.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_test_one_IMU/packet.o" beforeDir="false" afterPath="$PROJECT_DIR$/branch_test_one_IMU/packet.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_ui/.idea/branch_test_one_IMU.iml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_ui/.idea/branch_test_one_IMU.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_ui/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_ui/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_ui/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_ui/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_ui/.idea/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_ui/.idea/other.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_ui/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_ui/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch_ui/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/branch_ui/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imu_data_decode.c" beforeDir="false" afterPath="$PROJECT_DIR$/imu_data_decode.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imu_data_decode.h" beforeDir="false" afterPath="$PROJECT_DIR$/imu_data_decode.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imu_data_decode.o" beforeDir="false" afterPath="$PROJECT_DIR$/imu_data_decode.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packet.c" beforeDir="false" afterPath="$PROJECT_DIR$/packet.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packet.h" beforeDir="false" afterPath="$PROJECT_DIR$/packet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packet.o" beforeDir="false" afterPath="$PROJECT_DIR$/packet.o" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,13 +52,13 @@
     <SUITE FILE_PATH="coverage/whateverittakes$main_file.coverage" NAME="main_file Coverage Results" MODIFIED="1557064571799" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/branch_test_one_IMU" />
     <SUITE FILE_PATH="coverage/whateverittakes$mainwindow.coverage" NAME="mainwindow Coverage Results" MODIFIED="1558492361367" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/branch_ui" />
     <SUITE FILE_PATH="coverage/whateverittakes$IMU_data_read.coverage" NAME="IMU_data_read Coverage Results" MODIFIED="1556965152260" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/whateverittakes$cross_verify.coverage" NAME="cross_verify Coverage Results" MODIFIED="1558580147574" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/branch_cross_verify" />
+    <SUITE FILE_PATH="coverage/whateverittakes$cross_verify.coverage" NAME="cross_verify Coverage Results" MODIFIED="1558615704559" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/branch_cross_verify" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="2071424051">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="12" />
+          <entry key="project.closed" value="13" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.11" value="2" />
@@ -47,9 +67,10 @@
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.16" value="1" />
           <entry key="project.open.time.18" value="1" />
+          <entry key="project.open.time.19" value="1" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="14" />
+          <entry key="project.opened" value="15" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -66,12 +87,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="py" value="6744" />
-          <entry key="txt" value="319" />
+          <entry key="txt" value="346" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="319" />
+          <entry key="PLAIN_TEXT" value="346" />
           <entry key="Python" value="6744" />
         </counts>
       </usages-collector>
@@ -82,8 +103,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/branch_cross_verify/cross_verify.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1402">
-              <caret line="520" lean-forward="true" selection-start-line="520" selection-end-line="520" />
+            <state relative-caret-position="-6373">
+              <caret line="199" column="4" selection-start-line="199" selection-start-column="4" selection-end-line="199" selection-end-column="4" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
                 <marker date="1558577053187" expanded="true" signature="3467:5064" ph="..." />
@@ -374,12 +395,18 @@
       <option name="project" value="LOCAL" />
       <updated>1556967404346</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="201905023&#10;cross verify the imu data">
+      <created>1558580918482</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1558580918482</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
-    <editor active="true" />
+    <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.42111236" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -416,7 +443,8 @@
     <MESSAGE value="20190501&#10;finish reading the serial port data;&#10;finish analyse the data;&#10;but seems something wrong with the analysis;&#10;wait to see where is the question" />
     <MESSAGE value="20190503&#10;finish building the model;&#10;getting the correct feedback." />
     <MESSAGE value="20190504&#10;draw the graph of the pos and euler angle" />
-    <option name="LAST_COMMIT_MESSAGE" value="20190504&#10;draw the graph of the pos and euler angle" />
+    <MESSAGE value="201905023&#10;cross verify the imu data" />
+    <option name="LAST_COMMIT_MESSAGE" value="201905023&#10;cross verify the imu data" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/../../anaconda3/lib/python3.6/ctypes/__init__.py" />
@@ -476,8 +504,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/branch_cross_verify/cross_verify.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1402">
-          <caret line="520" lean-forward="true" selection-start-line="520" selection-end-line="520" />
+        <state relative-caret-position="-6373">
+          <caret line="199" column="4" selection-start-line="199" selection-start-column="4" selection-end-line="199" selection-end-column="4" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
             <marker date="1558577053187" expanded="true" signature="3467:5064" ph="..." />
