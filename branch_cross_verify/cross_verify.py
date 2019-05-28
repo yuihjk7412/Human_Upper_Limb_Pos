@@ -243,24 +243,24 @@ def Stop_The_Process():
 
 def Get_Euler_Angle(Rot_Mat):
     assert (Rot_Mat.shape == (3, 3))
-    xtheta = np.degrees(np.arcsin(-Rot_Mat[1][2]))
+    #前提条件是Tpose，次序为132
+    '''xtheta = np.degrees(np.arcsin(-Rot_Mat[1][2]))
     ytheta = np.degrees(np.arctan2(Rot_Mat[0][2], Rot_Mat[2][2]))
-    ztheta = np.degrees(np.arctan2(Rot_Mat[1][0], Rot_Mat[1][1]))
+    ztheta = np.degrees(np.arctan2(Rot_Mat[1][0], Rot_Mat[1][1]))'''
+    xtheta = np.degrees(np.arctan2(Rot_Mat[2][1], Rot_Mat[1][1]))
+    ytheta = np.degrees(np.arctan2(Rot_Mat[0][2], Rot_Mat[0][0]))
+    ztheta = np.degrees(np.arcsin(-Rot_Mat[0][1]))
     return [xtheta, ytheta, ztheta]
 
 
-def cal_RSsJs(q0, q1, q2, q3):
+def cal_RSsJs(q0, q1, q2, q3, ztheta_initial):
     # 放置与躯干传感器默认Y轴与关节Y轴平行，放置于胸前，Z轴指向身体外
-    RSs2Js = Quat2R(q0, q1, q2, q3)
-    yta = np.arcsin(-RSs2Js[2, 0])
-    xta = np.arctan2(RSs2Js[2, 1], RSs2Js[2, 2])
-    yta = np.squeeze(yta)
-    xta = np.squeeze(xta)
-    RSs2Js = np.array(
-        [[np.cos(yta), np.sin(xta) * np.sin(yta), np.sin(yta) * np.cos(xta)], [0, np.cos(xta), -np.sin(xta)],
-         [-np.sin(yta), np.cos(yta) * np.sin(xta), np.cos(xta) * np.cos(yta)]])
-    print('ytheta:%0.3f' % np.degrees(yta))
-    print('xtheta:%0.3f' % np.degrees(xta))
+    print('放置于躯干传感器默认Y轴与关节Y轴平行，放置于胸前，Z轴指向身体外')
+    RSs2E = Quat2R(q0, q1, q2, q3)
+    RE2Js = np.array(
+        [[np.cos(ztheta_initial), np.sin(ztheta_initial), 0], [-np.sin(ztheta_initial), np.cos(ztheta_initial), 0],
+         [0, 0, 1]])
+    RSs2Js = np.dot(RE2Js, RSs2E)
     return RSs2Js
 
 
@@ -350,8 +350,38 @@ def Read_Xsens_Quaternion(callback):
             s = [quaternion[0],quaternion[1],quaternion[2],quaternion[3]]
     return s
 
+def Record_Initial_Yaw():
+    print('请0#传感器放置于胸口中央')
+    time.sleep(2)
+    temp = np.zeros([1, 32])
+    i = 0
+    while i < Initialize_Num:
+        Get_Quat(Quat)
+        for j in range(32):
+            temp[i, j] = Quat[j]
+        print("The %d time initialization:" % (i + 1))
+        Max_Dif = np.max(temp, axis=0, keepdims=True) - np.min(temp, axis=0, keepdims=True)
+        if ((Max_Dif > Initialize_Threshold).any()):
+            i = 0
+            print("Initialization Failure!Please stay still!")
+            temp = np.zeros([1, 32])
+            continue
+        time.sleep(0.5)
+        temp = np.row_stack((temp, np.zeros([1, 32])))
+        i = i + 1
+
+    temp = np.delete(temp, -1, 0)
+    average = np.average(temp, axis=0)
+    average = np.reshape(average, (1, 32))
+    RS2Es = Quat2R(average[0][0], average[0][1], average[0][2], average[0][3])
+    ztheta_initial = np.arctan2(RS2Es[1][0], RS2Es[0][0])
+    print('ztheta_initial:', ztheta_initial)
+    return ztheta_initial
+
 
 if __name__ == '__main__':
+
+    print('new branch for a new way of initialization:')
 
     while 1:
         temp = input("start the process?(Y/N):")
@@ -466,13 +496,19 @@ if __name__ == '__main__':
         REu_2Es = np.eye(3)
 
     while 1:
+        temp = input("记录当前躯体航向角？（Y/N)")
+        if temp == 'Y' or temp == 'y':
+            break
+    ztheta_initial = Record_Initial_Yaw()
+
+    while 1:
         temp = input("Set the initial position?(Y/N)")
         if temp == 'Y' or temp == 'y':
             break
     #Quat_Relative_Zero_Point = Set_Initial_Pos()  # 获得初始状态值
     [Quat_Relative_Zero_Point, Quat_Relative_Zero_Point_] = Set_Initial_Pos(callback)
     RSs2Js = cal_RSsJs(Quat_Relative_Zero_Point[0, 0], Quat_Relative_Zero_Point[0, 1], Quat_Relative_Zero_Point[0, 2],
-                       Quat_Relative_Zero_Point[0, 3])
+                       Quat_Relative_Zero_Point[0, 3],ztheta_initial)
     # 是否记录数据
     Flag_Data_Record = input("Record the data?(Y/N)")
     if Flag_Data_Record == 'Y' or Flag_Data_Record == 'y':
@@ -488,12 +524,15 @@ if __name__ == '__main__':
     num = 0
 
     while (1):
+        #read the data from the imu and the xsens
         Get_Quat(Quat)
+        xsens_Data = Read_Xsens_Quaternion(callback)
+
         Rot_Mat_u2s = Cur_Quat2Relative_R(Quat_Relative_Zero_Point, (np.asarray(Quat)).reshape((1, -1)), REu2Es, RSs2Js)
         upper_o = Get_Limb_Pos(Rot_Mat_u2s)
         [xtheta_temp, ytheta_temp, ztheta_temp] = Get_Euler_Angle(Rot_Mat_u2s)
 
-        xsens_Data = Read_Xsens_Quaternion(callback)
+
         Rot_Mat_u_2s = Cur_Quat2Relative_R(Quat_Relative_Zero_Point_, (np.array([Quat[0:4],xsens_Data])).reshape((1, -1)), REu_2Es, RSs2Js)
         upper_o_ = Get_Limb_Pos(Rot_Mat_u_2s)
         [xtheta_temp_, ytheta_temp_, ztheta_temp_] = Get_Euler_Angle(Rot_Mat_u_2s)
@@ -508,9 +547,9 @@ if __name__ == '__main__':
 
         time.sleep(0.01)
         xsens_Data = Read_Xsens_Quaternion(callback)
-        print("\rNO%d\t\t|X:%0.3f\tY:%0.3f\tZ:%0.3f|\t\t|X_:%0.3f\tY_:%0.3f\tZ_:%0.3f|\t"
+        print("\rNO%d\t\t|X:%0.3f\tY:%0.3f\tZ:%0.3f|\t\t|X_:%0.3f\tY_:%0.3f\tZ_:%0.3f|\t\t|Xtheta:%0.3f\tYtheta:%0.3f\tZtheta:%0.3f|\t"
               % (num, upper_o[0][0, 0], upper_o[0][1, 0], upper_o[0][2, 0]
-                    ,upper_o_[0][0, 0], upper_o_[0][1, 0], upper_o_[0][2, 0]), end='', flush=True)
+                    ,upper_o_[0][0, 0], upper_o_[0][1, 0], upper_o_[0][2, 0],xtheta_temp, ytheta_temp, ztheta_temp), end='', flush=True)
 
         '''if len(xtheta) > 500:
             time_end = time.time()
